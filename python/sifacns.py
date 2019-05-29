@@ -96,10 +96,10 @@ class Sifacns:
             self.log('ステータスコード：' + str(result.status_code))
             exit()
         
-        pattern = '<td>プレイヤー名</td>(.*?)<td class="fwb">(.*?)</td>'
+        pattern = '<div class="profile_player_name">(.*?)</div>'
         username = re.findall(pattern, result.text, re.S)
         self.log('ログインに成功しました')
-        self.log('ユーザ名：' + html.unescape(username[0][1]))
+        self.log('ユーザ名：' + html.unescape(username[0]))
 
     def getLiveList(self):
         baseUrl = 'https://members.lovelive-sifacns.jp'
