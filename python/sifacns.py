@@ -107,6 +107,8 @@ class Sifacns:
         url1 = '/rank/live?mode=1&c=2&page=1'
         # Aqours
         url2 = '/rank/live?mode=2&c=2&page=1'
+        # SaintSnow
+        url3 = '/rank/live?mode=3&c=2&page=1'
 
         self.log('楽曲一覧を取得します')
 
@@ -170,6 +172,38 @@ class Sifacns:
             else:
                 self.log('次のページの取得に失敗しました')
                 exit()
+
+        # SaintSnowを取得
+        while True:
+            # URL作成
+            url = baseUrl + url3
+            # 取得
+            result = self.__session.post(url)
+            if result.status_code != 200:
+                self.log('楽曲一覧の取得に失敗しました')
+                self.log('ステータスコード：' + str(result.status_code))
+                exit()
+            
+            # 詳細URL取得
+            pattern = '<div class="table-cell100">(.*?)<a href="(.*?)">'
+            list = re.findall(pattern, result.text, re.S)
+            if list:
+                for l in list:
+                    self.__dtlUrlList.append(baseUrl + l[1])
+
+            # 次のページを取得
+            #pattern = '<a href="(.*)" rel="next">'
+            #url3 = re.findall(pattern, result.text)
+            #if url3:
+            #    if url3[0] == '#':
+            #        break
+            #    else:
+            #        url3 = url3[0]
+            #else:
+            #    self.log('次のページの取得に失敗しました')
+            #    exit()
+
+            break;
 
         self.log(str(self.getLiveListCount()) + '件取得しました')
     
